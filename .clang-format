@@ -1,0 +1,27 @@
+Language:        Cpp
+BasedOnStyle:    Google
+
+IndentWidth:     4
+TabWidth:        4
+UseTab:          Always
+ColumnLimit:     100
+
+BreakBeforeBraces: Allman
+
+BraceWrapping:
+  AfterControlStatement: true
+  IndentBraces: false
+  AfterEnum: true
+  AfterFunction: true
+
+AllowShortIfStatementsOnASingleLine: true
+SortIncludes: false
+
+# Switch/Case formatting
+IndentCaseLabels: false
+AllowShortCaseLabelsOnASingleLine: true
+AllowShortBlocksOnASingleLine: true
+AlignTrailingComments: true
+
+# Enum formatting
+AllowShortEnumsOnASingleLine: false
