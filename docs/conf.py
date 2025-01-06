@@ -45,6 +45,13 @@ breathe_default_project = "playzerx-docs"
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 html_theme = 'sphinx_book_theme'
+html_theme_options = {
+    "logo": {
+        "image_light": "_static/playzerx_logo.png",
+        "image_dark": "_static/playzerx_logo_dark.png"
+    }
+}
 html_static_path = ['_static']
-html_logo = 'playzerx_logo.png'
+# html_logo = '_static/playzerx_logo.png'
+html_css_files = ['custom.css']
 
