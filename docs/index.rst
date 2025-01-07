@@ -3,7 +3,7 @@ PlayzerX documentation
 
 .. raw:: html
 
-   <img src="_static/playzerx_logo.png" class="theme-logo" alt="PlayzerX Logo" style="display: block; margin: 0 auto; width: 600px;">
+   <img src="_static/playzerx_logo.png" class="theme-logo" alt="PlayzerX Logo" style="display: block; margin: 0 auto; width: 400px;">
 
 The Playzer X-Series (or “PlayzerX”) provides developers, makers, engineers,
 and students easy access to Playzer technology and its underlying VGLP
@@ -13,6 +13,11 @@ to control the laser beam by software via USB.
 
 - Monochrome Playzer X-Series, Part Numbers: PX1-[R/G/B/V]
 - Playzer X-Series, RGB Part Number (available soon): PX1-RGB
+
+
+
+Table of Contents
+------------------
 
 .. toctree::
    :maxdepth: 2
