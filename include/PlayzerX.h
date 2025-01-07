@@ -28,7 +28,6 @@ char scvtext[100];
 
 #include "MTISerial.h"
 #include "PlayzerXDefinitions.h"
-#include "PlayzerXTypes.h"
 
 namespace playzerx
 {

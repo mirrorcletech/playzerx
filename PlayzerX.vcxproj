@@ -172,7 +172,6 @@ xcopy /d /y $(OutDir)PlayzerX64.lib lib\x64
   <ItemGroup>
     <ClInclude Include="include\PlayzerX.h" />
     <ClInclude Include="include\PlayzerXDefinitions.h" />
-    <ClInclude Include="include\PlayzerXTypes.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
