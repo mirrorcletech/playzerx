@@ -54,6 +54,8 @@ jobs:
           RUN_ID=`gh run --repo ${REPO_NAME} list --workflow "${WF_NAME}" --json databaseId --jq .[0].databaseId`
           echo "Detected latest run id of ${RUN_ID} for workflow ${WF_NAME}"
           echo "run-id=${RUN_ID}" >> "$GITHUB_OUTPUT"
+        env:
+          GH_TOKEN: ${{ github.token }}
       
       - name: Download artifact from "Test" workflow
         uses: actions/download-artifact@v4
