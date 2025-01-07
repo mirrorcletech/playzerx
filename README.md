@@ -2,6 +2,7 @@
 
 <img src="docs/_static/playzerx_logo.png" alt="PlayzerX Logo" width="400"/>
 
+[![Static Badge](https://img.shields.io/badge/%F0%9F%93%93-Documentation-blue?labelColor=white)]([https://pisterlab.github.io/micromissiles-unity/](https://mirrorcletech.github.io/playzerx/))
 
 The Playzer X-Series (or “PlayzerX”) provides developers, makers, engineers,
 and students easy access to Playzer technology and its underlying VGLP
