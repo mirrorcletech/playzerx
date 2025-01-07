@@ -15,10 +15,10 @@ jobs:
     steps:
     - name: Checkout playzerx repo
       uses: actions/checkout@v4
-    - name: Set up Python 3.10
+    - name: Set up Python 3.11
       uses: actions/setup-python@v4
       with:
-        python-version: '3.10'
+        python-version: '3.11'
     - name: Install Python dependencies
       run: |
         cd docs
@@ -32,7 +32,12 @@ jobs:
     - name: Install system dependencies
       run: |
         sudo apt-get install doxygen graphviz -y
-
+      
+    - name: Install fonts
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y fonts-roboto
+        
     - name: Generate Doxygen collateral 
       run: |
         cd docs
@@ -44,7 +49,7 @@ jobs:
         cd docs
         source ./venv/bin/activate
         make html
-        
+
     - name: Upload build artifact
       uses: actions/upload-artifact@v4
       with:
