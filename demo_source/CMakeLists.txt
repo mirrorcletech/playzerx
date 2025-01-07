@@ -11,7 +11,14 @@ add_executable(
 
     # Source files
     PlayzerX-Demo.cpp )
-    
+
+add_custom_command(
+    TARGET PlayzerX-Demo POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy
+            ${CMAKE_CURRENT_SOURCE_DIR}/butterfly.smp
+            $<TARGET_FILE_DIR:PlayzerX-Demo>/butterfly.smp
+)
+
 # Require C++11
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
