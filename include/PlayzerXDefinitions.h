@@ -1,7 +1,7 @@
 /**
  * \file PlayzerXDefinitions.h
  * \brief Defines global constants and error enumerations for the PlayzerX library.
- * \version 2.0.0.0
+ * \version 2.0.1.0
  *
  * Core error codes related to PlayzerX devices
  */
