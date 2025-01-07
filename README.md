@@ -10,12 +10,11 @@ control the laser beam by external controllers via Analog Inputs, and the option
 to control the laser beam by software via USB.
 
 - Monochrome Playzer X-Series, Part Numbers: PX1-[R/G/B/V]
-- Playzer X-Series, RGB Part Number (available soon): PX1-RGB
+- RGB Playzer X-Series, Part Number: PX1-RGB
 
-
-Playzer X is available for purchase from DigiKey, or you can contact Mirrorcle directly at sales@mirrorcletech.com (links below)
+Playzer X is available directly from Mirrorcle by contacting sales@mirrorcletech.com, or from DigiKey (links below)
 
 <div style="display: flex; gap: 20px;">
-  <a href="https://www.digikey.com/en/products/filter/evaluation-and-demonstration-boards-and-kits/787?s=N4IgjCBcpmAMVQGMoDMCGAbAzgUwDQgD2UA2iAGwAscVArAgLqEAOALlCAMpsBOAlgDsA5iAC%2BhALQRoIFJAw4CxMiABMVAOx0QjMfqA" target="_blank"><img src="docs/_static/digikey_logo_button.png" alt="Digi-Key Logo" width="150"/></a>
   <a href="https://www.mirrorcletech.com/wp/contact/" target="_blank"><img src="docs/_static/mirrorcle_logo_button.png" alt="Mirrorcle Logo" width="150"/></a>
+  <a href="https://www.digikey.com/en/products/filter/evaluation-and-demonstration-boards-and-kits/787?s=N4IgjCBcpmAMVQGMoDMCGAbAzgUwDQgD2UA2iAGwAscVArAgLqEAOALlCAMpsBOAlgDsA5iAC%2BhALQRoIFJAw4CxMiABMVAOx0QjMfqA" target="_blank"><img src="docs/_static/digikey_logo_button.png" alt="Digi-Key Logo" width="150"/></a>
 </div>
