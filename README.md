@@ -2,7 +2,7 @@
 
 <img src="docs/_static/playzerx_logo.png" alt="PlayzerX Logo" width="400"/>
 
-[![Static Badge](https://img.shields.io/badge/%F0%9F%93%93-Documentation-blue?labelColor=white)]([https://mirrorcletech.github.io/playzerx/](https://mirrorcletech.github.io/playzerx/))
+[![Static Badge](https://img.shields.io/badge/%F0%9F%93%93-Documentation-blue?labelColor=white)](https://mirrorcletech.github.io/playzerx/)
 [![PlayzerX CI](https://github.com/mirrorcletech/playzerx/actions/workflows/main.yml/badge.svg)](https://github.com/mirrorcletech/playzerx/actions/workflows/main.yml)
 [![Build documentation](https://github.com/mirrorcletech/playzerx/actions/workflows/build-docs.yml/badge.svg)](https://github.com/mirrorcletech/playzerx/actions/workflows/build-docs.yml)
 
