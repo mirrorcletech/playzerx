@@ -19,7 +19,7 @@ jobs:
       uses: actions/setup-python@v4
       with:
         python-version: '3.10'
-    - name: Install dependencies & build
+    - name: Install Python dependencies
       run: |
         cd docs
         pip install --upgrade pip
@@ -28,13 +28,23 @@ jobs:
         ls venv/
         source ./venv/bin/activate
         pip install -r requirements.txt
+
+    - name: Install system dependencies
+      run: |
         sudo apt-get install doxygen graphviz -y
-        
-        # Build Doxygen source
+
+    - name: Generate Doxygen collateral 
+      run: |
+        cd docs
+        source ./venv/bin/activate
         doxygen Doxyfile
-        
-        # Build webpage from Sphinx
+
+    - name: Generate Sphinx documentation
+      run: |
+        cd docs
+        source ./venv/bin/activate
         make html
+        
     - name: Upload build artifact
       uses: actions/upload-artifact@v4
       with:
