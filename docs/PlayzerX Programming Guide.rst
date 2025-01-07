@@ -11,6 +11,27 @@ This C++ API allows users to initialize and discover PlayzerX devices, connect v
    :backlinks: none
 
 
+Basic Hardware Setup and Data Flow
+-----------------------------------
+
+.. image:: _static/playzerx_usb_buffer.png
+   :alt: PlayzerX USB Data Flow
+   :align: center
+
+When using a PlayzerX Module in USB mode, the Controller's buffer is configured as a circular FIFO buffer. 
+The total buffer size is **125,000 samples** for the Monochrome version and **83,333 samples** for the RGB version.
+
+The Controller continuously operates in reading mode (outputting samples) as long as there are samples available to read, 
+meaning the Read Pointer has not caught up with the Write Pointer. The reading timing, or the movement of the Read Pointer, is
+determined by the SampleRate, which can be set using the :cpp:func:`playzerx::PlayzerX::SetSampleRate` command (default is 22,000 samples per second).
+
+The writing timing, on the other hand, depends on the data provided by the user over the serial port and can reach up to
+approximately 50,000 samples per second. The USB data rate can vary between 500 KB/s and 625 KB/s, but overhead in the API and OS 
+can set the upper limit on the actual data rate. This is achieved using the :cpp:func:`playzerx::PlayzerX::SendData` commands. 
+Before writing new data, users should typically check the :cpp:func:`playzerx::PlayzerX::GetSamplesRemaining` value to ensure that the buffer requires new data and that there is
+sufficient space for it.
+
+
 Initialize, Search, and Connect
 --------------------------------
 
