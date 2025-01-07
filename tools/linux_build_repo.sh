@@ -1,7 +1,9 @@
 #!/bin/bash
 
-# Placeholder script
-echo "This is a placeholder script."
+rm -rf Debug
+mkdir Debug
+cd Debug && cmake -DCMAKE_BUILD_TYPE=Debug ..
+make
 
 # Exit with status 0
 exit 0
