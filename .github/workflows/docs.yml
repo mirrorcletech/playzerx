@@ -15,18 +15,19 @@ jobs:
     steps:
     - name: Checkout playzerx repo
       uses: actions/checkout@v4
-    - name: Set up Python 3.11
-      uses: actions/setup-python@v4
+    - name: Setup Conda
+      uses: conda-incubator/setup-miniconda@v3
       with:
         python-version: '3.11'
+        activate-environment: docs-env
+        auto-activate-base: false
+
     - name: Install Python dependencies
+      shell: bash -l {0}
       run: |
         cd docs
         pip install --upgrade pip
-        mkdir venv
-        python3 -m venv ./venv
-        ls venv/
-        source ./venv/bin/activate
+        conda install pip
         pip install -r requirements.txt
 
     - name: Install system dependencies
@@ -39,15 +40,15 @@ jobs:
         sudo apt-get install -y fonts-roboto
         
     - name: Generate Doxygen collateral 
+      shell: bash -l {0}
       run: |
         cd docs
-        source ./venv/bin/activate
         doxygen Doxyfile
 
     - name: Generate Sphinx documentation
+      shell: bash -l {0}
       run: |
         cd docs
-        source ./venv/bin/activate
         make html
 
     - name: Upload build artifact
