@@ -1,0 +1,42 @@
+name: Deploy documentation
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build-docs:
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 5
+
+    steps:
+    - name: Checkout playzerx repo
+      uses: actions/checkout@v4
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    - name: Install dependencies & build
+      run: |
+        cd docs
+        pip install --upgrade pip
+        mkdir venv
+        python3 -m venv ./venv
+        ls venv/
+        source ./venv/bin/activate
+        pip install -r requirements.txt
+        sudo apt-get install doxygen graphviz -y
+        
+        # Build Doxygen source
+        doxygen Doxyfile
+        
+        # Build webpage from Sphinx
+        make html
+    - name: Upload build artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: docs-artifact
+        path: docs/build/

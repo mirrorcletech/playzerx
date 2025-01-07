@@ -216,3 +216,6 @@ gcc_*
 
 #Matlab backups
 *.asv
+
+# Documentation virtual environment
+docs/venv/
