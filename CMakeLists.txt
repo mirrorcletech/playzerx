@@ -15,7 +15,8 @@ add_library( # Library name
              SHARED
 
              # Source files
-             PlayzerX.cpp)
+             PlayzerX.cpp
+             MTISerial.cpp)
 
 # Require C++11
 set(CMAKE_CXX_STANDARD 11)
