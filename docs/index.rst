@@ -32,7 +32,7 @@ Table of Contents
    :caption: Guides
 
    PlayzerX Programming Guide
-   PlayzerX-USB Serial Protocol
+   PlayzerX USB Serial Protocol
 
 .. toctree::
    :maxdepth: 2

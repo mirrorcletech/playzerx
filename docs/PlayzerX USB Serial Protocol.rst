@@ -1,4 +1,4 @@
-PlayzerX-USB Serial Protocol
+PlayzerX USB Serial Protocol
 ===============================
 
 Binary Mode Serial Command Structure
