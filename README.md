@@ -43,6 +43,25 @@ Playzer X-Series provides simplified control of MEMS Mirror and Laser Beam with 
 For full specifications including the optical scanning angle (field of regard), laser power, and point-to-point scanning bandwidth,
 please see the [Mirrorcle Playzer X-Series - User Guide](https://mirrorcletech.com/pdf/PX/Mirrorcle_Playzer_X-Series_-_User_Guide.pdf).
 
+### PlayzerX Analog Input
+
+The Analog Input configuration of the Playzer X allows users to interface via three channels of analog signals, allowing control of laser beam direction (X,Y or azimuth and elevation) and laser beam intensity. Use of the PlayzerX-AIN requires user's own hardware such as e.g.: data acquisition card (NIDAQ or similar), FPGA/MCU based embedded systems, or bench-top lab equipment. This Playzer system cannot be directly controlled via a software interface as it takes voltages as inputs.
+
+Electrical specifications such as power supply, voltage input ranges, and current draw are detailed in the [Mirrorcle Playzer X-Series User Guide](https://mirrorcletech.com/pdf/PX/Mirrorcle_Playzer_X-Series_-_User_Guide.pdf).
+
+#### Example integrations with third-party hardware
+
+The [Moncha Lite from Showtacle](https://www.showtacle.jp/v18/lasershowsoftware/hardware/moncha/moncha-lite/)
+
+<img src="docs/_static/playzerx_ain_moncha_lite.png" alt="PlayzerX AIN breakout board" width="600"/>
+
+The [FB3QS with QuickShow from Pangolin](https://pangolin.com/products/fb3qs-with-quickshow)
+
+<img src="docs/_static/playzerx_ain_pangolin.png" alt="PlayzerX AIN breakout board" width="600"/>
+
+The [USB X-Series NI-DAQ Controller from National Instruments](https://www.ni.com/en/support/documentation/supplemental/09/what-is-ni-x-series-.html)
+
+<img src="docs/_static/playzerx_ain_nidaq.png" alt="PlayzerX AIN breakout board" width="600"/>
 
 ## Associated papers and application notes 
 
