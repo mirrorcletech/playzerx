@@ -156,7 +156,6 @@ xcopy /d /y "$(ProjectDir)..\lib\x86\*.dll" "$(OutDir)"
   <ItemGroup>
     <ClInclude Include="..\include\PlayzerXDefinitions.h" />
     <ClInclude Include="..\mtidevice\include\MTIDefinitions.h" />
-    <ClInclude Include="PlayzerX-Demo.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

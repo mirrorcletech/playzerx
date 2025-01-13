@@ -173,6 +173,7 @@ void AudioDemo()
 		m = 140 + (y * 115);
 		playzer->SendDataXYM(x, y, m);
 	} while (!_kbhit());
+	_getch();	// consume the pressed key
 
 	playzer->SendDataXYM(0, 0, 0);	// Reset beam to center with laser at lowest power
 }
@@ -297,6 +298,7 @@ void AudioDemoScope()
 		mData.insert(mData.end(), mDataReverse.begin(), mDataReverse.end());
 		playzer->SendDataXYM(&xData[0], &yData[0], &mData[0], npts, npts);
 	} while (!_kbhit());
+	_getch();	// consume the pressed key
 
 	playzer->SendDataXYM(0, 0, 0);	// Reset beam to center with laser at lowest power
 }
@@ -372,7 +374,7 @@ void PointToPointDemo()
 	printf("\nInput position the device should step and settle to.\n");
 	printf("Use normalized positions from -1 to 1 for each axis\n");
 	printf("Use laser modulation (power) value from 0 to 255\n");
-	printf("To EXIT, enter any value out of the valid range\n\n");
+	printf(TXT_YEL "To EXIT, enter any value out of the valid range\n\n" TXT_RST);
 
 	// First get the desired step time between last point and the next point
 
@@ -423,14 +425,14 @@ void ImportFileDemo()
 	{
 		printf(
 			"Sample file did not specify SPS setting.  Using default value of 20000 samples per "
-			"second.\n");
+			"second.\n\n");
 		sps = 20000;
 	}
 
 	// Ensure that the sample rate from the .smp does not exceed the device limits
 	if (sps > 60000 || sps <= 500)
 	{
-		printf("Invalid sample rate. Defaulting to 5000\n");
+		printf("Invalid sample rate. Defaulting to 5000\n\n");
 		sps = 5000;
 	}
 	playzer->SetSampleRate(sps);  // Set the sample rate to that specified by .smp
@@ -451,6 +453,7 @@ void ImportFileDemo()
 		playzer->SendDataXYM(x, y, m, npts, 10000);
 
 	} while (!_kbhit());  // wait for a keypress in console
+	_getch();	// consume the pressed key
 
 	// Send device safely to origin, continue running at origin (0,0) position
 	playzer->ClearData();
@@ -460,10 +463,12 @@ void ImportFileDemo()
 	SAFE_DELETE_ARRAY(m);
 }
 
+// returns true if connected playzer is RGB Playzer
+// false if Monochrome Playzer
 bool IsRGBModule()
 {
 	std::string dataFormat = playzer->GetDataFormat();
-	if (dataFormat == "RGB")
+	if (dataFormat == "XYRGB")
 		return true;
 	else
 		return false;
@@ -482,7 +487,7 @@ void ArrowKeysDemo()
 	printf("A and D Keys Control X-Axis.\n");
 	printf("W and S Keys Control Y-Axis.\n");
 	printf("P/p Keys to Control Laser Power Up/down.\n");
-	printf("Hit ESC to exit this mode\n");
+	printf(TXT_YEL "Hit ESC to exit this mode\n" TXT_RST);
 	printf("\n\n\t\tCurrent X and Y position [-1 to +1]: %3.2f, %3.2f", x, y);
 	// Ensure that digital output enable is on for the digital port to output "m" values
 	// Move to origin and output 255 on digital output port and HIGH on Sync
@@ -535,20 +540,45 @@ void ArrowKeysDemo()
 	// connected laser)
 }
 
+// In this example we test how fast laser beam can scan when we provide
+// only one sample per SendData call. We are continuously sending a new position
+// to the Playzer but only one sample point at a time
 void BasicCircle()
 {
-	float x[10], y[10];
-	unsigned char m[10];
+	float x, y;
+	unsigned char m;
 
-	playzer->SetSampleRate(10000);
+	printf("\nThis demo tests speed of sending a single sample with each SendData call.\n");
+	printf("There are two options tested here, XYM sample with 9 bytes/sample load\n");
+	printf("And XY sample with 8 bytes/sample load\n");
+	printf("Loops continue until user presses any key to EXIT\n\n");
+	
+	// setting sample rate here but it is not critical since effective
+	// sample rate will be limited to the for-loop rate of SendDataXYM calls
+	playzer->SetSampleRate(50000);
 
-	for (int i = 0; i < 256; i++)  // 2 circles in 1/128th of circle steps
+	printf("Loop for XYM samples to form 5 circles running (360 samples per circle)...\n");
+	for (int i = 0; i < 5 * 360; i++)
 	{
-		x[0] = cos(2.f * (float)M_PI * (float)i / 128);
-		y[0] = sin(2.f * (float)M_PI * (float)i / 128);
-		m[0] = i % 255;
-		playzer->SendDataXYM(x, y, m, 1);
-		Sleep(1);
+		x = cos((float)i * 2.f * M_PI / 360);
+		y = sin((float)i * 2.f * M_PI / 360);
+		m = (int)((float)i / (float)1.758) % 256;
+		playzer->SendDataXYM(x, y, m);	// send single XYM sample right away
+		//Sleep(1);
+		if (_kbhit())
+			break;
+	}
+
+	printf("Loop for XY samples to form 5 circles running (360 samples per circle)...\n");
+	for (int i = 0; i < 10 * 628; i++)
+	{
+		x = cos((float)i * 2.f * M_PI / 360);
+		y = sin((float)i * 2.f * M_PI / 360);
+		m = (int)((float)i / (float)1.758) % 256;
+		playzer->SendDataXY(x, y);	// send single XY sample right away
+		//Sleep(1);
+		if (_kbhit())
+			break;
 	}
 }
 
