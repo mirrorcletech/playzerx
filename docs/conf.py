@@ -12,7 +12,7 @@ sys.path.insert(0, os.path.abspath('.'))
 
 
 project = 'PlayzerX'
-copyright = '2024, Mirrorcle Technologies, Inc'
+copyright = '2025, Mirrorcle Technologies, Inc'
 author = 'Mirrorcle Technologies, Inc'
 release = '2.0.1.0'
 

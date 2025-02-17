@@ -63,6 +63,18 @@ The [USB X-Series NI-DAQ Controller from National Instruments](https://www.ni.co
 
 <img src="docs/_static/playzerx_ain_nidaq.png" alt="PlayzerX AIN breakout board" width="600"/>
 
+### PlayzerX USB Input
+
+The micro-USB port on the embedded Monochrome Playzer Controller provides power as well as serial communication via USB.
+
+PlayzerX-USB offers a Binary Mode protocol for USB serial communication. This protocol includes a set of commands that allow users to program the scanning angle and brightness of the Playzer laser output beam comprehensively.
+
+Binary mode communication implements a more efficient use of USB bandwidth by maximizing data encoded in each set of bytes sent to the Controller.
+
+<img src="docs/_static/playzerx_usb.png" alt="PlayzerX USB" width="600"/>
+
+*PlayzerX-USB allows direct interface between the Host PC and the PlayzerX interface*
+
 ## Associated papers and application notes 
 
 Lovell, Daniel, et al. "Optical MEMS enable next generation solutions for robot vision and human-robot interaction." MOEMS and Miniaturized Systems XXI. Vol. 12013. SPIE, 2022. [Link to PDF](https://mirrorcletech.com/pdf/pub/Mirrorcle_-_Optical_MEMS_enable_next_generation_solutions.pdf)

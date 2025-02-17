@@ -87,6 +87,20 @@ The `USB X-Series NI-DAQ Controller from National Instruments <https://www.ni.co
    :alt: PlayzerX AIN NI-DAQ integration
    :width: 600px
 
+PlayzerX USB Input
+^^^^^^^^^^^^^^^^^^^^^^
+The micro-USB port on the embedded Monochrome Playzer Controller provides power as well as serial communication via USB.
+
+PlayzerX-USB offers a Binary Mode protocol for USB serial communication. This protocol includes a set of commands that allow users to program the scanning angle and brightness of the Playzer laser output beam comprehensively.
+
+Binary mode communication implements a more efficient use of USB bandwidth by maximizing data encoded in each set of bytes sent to the Controller.
+
+.. image:: _static/playzerx_usb.png
+   :alt: PlayzerX USB
+   :width: 600px
+
+*PlayzerX-USB allows direct interface between the Host PC and the PlayzerX interface*
+
 Associated papers and application notes
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
