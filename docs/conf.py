@@ -12,7 +12,7 @@ sys.path.insert(0, os.path.abspath('.'))
 
 
 project = 'PlayzerX'
-copyright = '2024, Mirrorcle Technologies, Inc'
+copyright = '2025, Mirrorcle Technologies, Inc'
 author = 'Mirrorcle Technologies, Inc'
 release = '2.0.1.0'
 
@@ -47,11 +47,16 @@ breathe_default_project = "playzerx-docs"
 
 html_theme = 'sphinx_book_theme'
 html_theme_options = {
+    "path_to_docs": "docs/",
+    "repository_url": "https://github.com/mirrorcletech/playzerx",
+    "repository_branch": "master",
+    "use_repository_button": True,
     "logo": {
         "image_light": "_static/playzerx_logo.png",
         "image_dark": "_static/playzerx_logo_dark.png"
     }
 }
+
 html_static_path = ['_static']
 # html_logo = '_static/playzerx_logo.png'
 html_css_files = ['custom.css']
