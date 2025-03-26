@@ -22,6 +22,3 @@ IndentCaseLabels: false
 AllowShortCaseLabelsOnASingleLine: true
 AllowShortBlocksOnASingleLine: true
 AlignTrailingComments: true
-
-# Enum formatting
-AllowShortEnumsOnASingleLine: false
