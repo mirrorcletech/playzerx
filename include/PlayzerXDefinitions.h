@@ -1,7 +1,7 @@
 /**
  * \file PlayzerXDefinitions.h
  * \brief Defines global constants and error enumerations for the PlayzerX library.
- * \version 2.0.1.0
+ * \version 2.1.0.0
  *
  * Core error codes related to PlayzerX devices
  */
@@ -9,7 +9,8 @@
 #ifndef PLAYZERX_DEFINITIONS_H
 #define PLAYZERX_DEFINITIONS_H
 
-#include "MTIDefinitions.h"	 // Required for MTI-specific definitions
+// Required for MTIDevice-specific definitions from Mirrorcle Software Suite
+#include "MTIDefinitions.h"	 
 
 #ifdef MTI_UNIX
 #include <cstring>

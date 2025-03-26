@@ -1,13 +1,12 @@
 //////////////////////////////////////////////////////////////////////
 // PlayzerX.cpp
-// Version: 2.0.1.0
+// Version: 2.1.0.0
 //////////////////////////////////////////////////////////////////////
 
 #include "PlayzerX.h"
 
 namespace playzerx
 {
-
 PlayzerX* PlayzerX::CreateDevice()
 {
 	PlayzerX* pl = new PlayzerX();
@@ -80,9 +79,9 @@ MTISerialIO* PlayzerX::ConnectDevice(char* portName)
 
 	// Detect if comport name is missing escape sequence and add if necessary
 #ifdef MTI_WINDOWS
-	if (portName[0] == 67)	// Check if capital C for COM starts the string
+	if (portName[0] == 67)  // Check if capital C for COM starts the string
 		sprintf(connectPortName, "\\\\.\\%s", portName);
-	else if (portName[0] == 92)	 // Check if backslash is included in string
+	else if (portName[0] == 92)  // Check if backslash is included in string
 		strcpy(connectPortName, portName);
 	else
 	{
@@ -98,7 +97,7 @@ MTISerialIO* PlayzerX::ConnectDevice(char* portName)
 	}
 #endif
 #ifdef MTI_UNIX
-	if (portName[0] == '/')	 // Check if full path is passed in
+	if (portName[0] == '/')  // Check if full path is passed in
 		strcpy(connectPortName, portName);
 	else  // Otherwise prepend '/dev/'
 		sprintf(connectPortName, "/dev/%s", portName);
@@ -152,35 +151,43 @@ void PlayzerX::DisconnectDevice()
 
 int PlayzerX::GetSamplesRemaining()
 {
+	long lastError;
+	unsigned int pdwRead;
+	unsigned int m_iTimeOut = 250;
 	unsigned char data[MTI_SERIAL_QUEUE_SIZE];
+
 	if (m_StreamingSamplesRemaining)
 	{
-		// Clear all data previously sent by the controller to the host
+		// if controller is set to regularly stream SamplesRemaining we assume serial
+		// buffer already has latest value available. no need to request from controller
+		// Clear data previously sent by the controller - except latest 6 bytes (latest value)
 		m_SerialDevice->Read(data, MTI_SERIAL_QUEUE_SIZE - 6, 0, 0, MTI_BLOCKING_MODE_OFF);
+		// now get the latest 6 bytes which represent response to SamplesRemaining
+		lastError = m_SerialDevice->Read(data, 6, &pdwRead, m_iTimeOut);
 	}
-	else
+
+	unsigned char sendData[10];
+	if (!m_StreamingSamplesRemaining || (lastError == 5))  // if timeout above, try requesting data
 	{
 		// If not streaming, need to ask for them
-		m_CommandBytes.clear();
-		m_CommandBytes.resize(5);
-		m_CommandBytes[0] = 'p';
-		m_CommandBytes[1] = 'l';
-		m_CommandBytes[2] = 'g';
-		m_CommandBytes[3] = 5;
-		m_CommandBytes[4] = 10;	 // Include suffix here!
-		long serialError = m_SerialDevice->Write(&m_CommandBytes[0], 5, 0, 200);
+		sendData[0] = 'p';
+		sendData[1] = 'l';
+		sendData[2] = 'g';
+		sendData[3] = 5;
+		sendData[4] = 10;  // Include suffix here!
+		lastError = m_SerialDevice->Write(sendData, 5, 0, 200);
+		// now get the latest 6 bytes which represent response to SamplesRemaining
+		lastError = m_SerialDevice->Read(data, 6, &pdwRead, m_iTimeOut);
 	}
-	// unsigned char data[10];
-	unsigned int pdwRead;
-	unsigned int m_iTimeOut = 400;
 
+	if (lastError != 0) return -1;  // seems we could not get a good response
+
+	// Got response - enforce byte alignment by sliding until finding the complete preamble
 	unsigned char temp;
-	long countTries = 0, maxTries = 10;
-	long lastError;
+	long countTries = 0, maxTries = 6;
 	bool match;
-	// Enforce byte alignment by sliding until finding the complete preamble
-	lastError = m_SerialDevice->Read(data, 6, &pdwRead, m_iTimeOut);
-	match = (data[2] == 45) && (data[1] == 108) && (data[0] == 112);  // pl-
+
+	match = (data[2] == 45) && (data[1] == 108) && (data[0] == 112);  // do we see "pl-" preamble
 	while (!match)
 	{
 		temp = data[0];
@@ -190,9 +197,10 @@ int PlayzerX::GetSamplesRemaining()
 		data[3] = data[2];
 		data[2] = data[1];
 		data[1] = temp;
-		match = (data[2] == 45) && (data[1] == 108) && (data[0] == 112);  // pl-
+		match =
+			(data[2] == 45) && (data[1] == 108) && (data[0] == 112);  // do we see "pl-" preamble
 		countTries++;
-		if ((lastError != 0) || (countTries >= maxTries)) return -1;
+		if (countTries > maxTries) return -1;
 	}
 	m_SamplesRemaining = (data[5] << 16) + (data[4] << 8) + data[3];
 
@@ -617,6 +625,9 @@ bool PlayzerX::IsDeviceConnected()
 		return false;
 	}
 
+	// let's purge serial buffers before this ping to controller
+	PurgeSerialBuffers();
+
 	unsigned char sendData[10];
 	sendData[0] = 'p';
 	sendData[1] = 'l';
@@ -626,7 +637,7 @@ bool PlayzerX::IsDeviceConnected()
 	long serialError = m_SerialDevice->Write(sendData, 5, 0, 200);
 	if (serialError != 0) return false;
 
-	char dataconf[64];
+	char dataconf[100];
 	unsigned char delineationChar = 0x0A;
 	long lastError;
 	// Enforce byte alignment by sliding until finding the complete preamble
@@ -647,6 +658,67 @@ void PlayzerX::PurgeSerialBuffers()
 
 	long serialError = m_SerialDevice->Purge();
 	if (serialError != 0) m_LastError = PlayzerXError::ERROR_GENERAL;
+}
+
+void PlayzerX::ResetDevice()
+{
+	if (!m_SerialDevice)
+	{
+		m_LastError = PlayzerXError::ERROR_CONNECTION;
+		return;
+	}
+	unsigned char sendData[10];
+	sendData[0] = 'p';
+	sendData[1] = 'l';
+	sendData[2] = 'b';
+	sendData[3] = 6;
+	sendData[4] = 0xEE;
+	sendData[5] = 10;  // Include suffix here!
+	long serialError = m_SerialDevice->Write(sendData, 6, 0, 200);
+	if (serialError == 0)
+		m_LastError = PlayzerXError::SUCCESS;
+	else
+		m_LastError = PlayzerXError::ERROR_GENERAL;
+	if (m_LastError == PlayzerXError::SUCCESS)
+	{
+		// we assume that the command was sent and unit reset successfully
+		// then we can assume unit is in default mode not streaming SamplesRemaining
+		m_StreamingSamplesRemaining = false;
+		// let's pause any execution for 2.5s, for sure unit is not available
+		Sleep(2500);
+	}
+}
+
+void PlayzerX::SwitchPlayzerXMode(bool enableAINMode, bool flashBoot)
+{
+	if (!m_SerialDevice)
+	{
+		m_LastError = PlayzerXError::ERROR_CONNECTION;
+		return;
+	}
+	unsigned char sendData[10];
+	sendData[0] = 'p';
+	sendData[1] = 'l';
+	sendData[2] = (flashBoot) ? 'I' : 'i';
+	sendData[3] = 8;
+	if (enableAINMode)
+	{
+		sendData[4] = 'a';
+		sendData[5] = 'i';
+		sendData[6] = 'n';
+	}
+	else
+	{
+		sendData[4] = 'u';
+		sendData[5] = 's';
+		sendData[6] = 'b';
+	}
+	sendData[7] = 10;  // Include suffix here!
+	long serialError = m_SerialDevice->Write(sendData, 8, 0, 200);
+	if (serialError == 0)
+		m_LastError = PlayzerXError::SUCCESS;
+	else
+		m_LastError = PlayzerXError::ERROR_GENERAL;
 }
 
 void PlayzerX::GetAvailableDevices(PlayzerXAvailableDevices& plad)
