@@ -53,8 +53,8 @@ jobs:
           sudo apt-get update
           sudo apt-get install libopencv-dev
         
-      - name: Build delivery folder
-        run: ./tools/linux_build_repo.sh
+      - name: Build delivery folder (Release)
+        run: ./tools/linux_build_repo.sh Release
       
       - name: Package Linux Build
         run: tar -czvf PlayzerX-${{ github.ref_name }}-Ubuntu-22.04-x86_64.tar.gz delivery/
