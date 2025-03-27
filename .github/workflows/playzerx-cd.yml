@@ -1,0 +1,122 @@
+name: PlayzerX-CD
+
+on:
+  push:
+    branches: [ release ]
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+.[0-9]+'
+  pull_request:
+    branches: [ release ]
+
+jobs:
+  verify-version:
+    runs-on: windows-2019
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Check version matches
+        shell: cmd
+        run: |
+          .\tools\check_release_version.bat %GITHUB_REF:refs/tags/=% PlayzerX.rc
+        
+  build-windows:
+    needs: verify-version
+    runs-on: windows-2019
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: setup-msbuild
+        uses: microsoft/setup-msbuild@v2
+          
+      - name: Build Release x64
+        run: msbuild PlayzerX-All.sln /p:Configuration=Release /p:Platform=x64
+      
+      - name: Package Windows Build
+        run: |
+          Compress-Archive -Path .\x64\Release\* -DestinationPath .\PlayzerX-${{ github.ref_name }}-Windows-x86_64.zip
+      
+      - name: Upload Windows Build
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-build
+          path: PlayzerX-${{ github.ref_name }}-Windows-x86_64.zip
+
+  build-ubuntu:
+    needs: verify-version
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install libopencv-dev
+        run: |
+          sudo apt-get update
+          sudo apt-get install libopencv-dev
+        
+      - name: Build delivery folder
+        run: ./tools/linux_build_repo.sh
+      
+      - name: Package Linux Build
+        run: tar -czvf PlayzerX-${{ github.ref_name }}-Ubuntu-22.04-x86_64.tar.gz delivery/
+      
+      - name: Upload Linux Build
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-build
+          path: PlayzerX-${{ github.ref_name }}-Ubuntu-22.04-x86_64.tar.gz
+
+  create-release:
+    needs: [build-windows, build-ubuntu]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - name: Get the version
+        id: get_version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+      
+      - name: Prepare release notes
+        run: |
+          mkdir -p temp
+          cp .github/workflows/templates/RELEASE.md temp/RELEASE.md
+          # Replace placeholders with actual version
+          sed -i "s/\[VERSION\]/${{ steps.get_version.outputs.VERSION }}/g" temp/RELEASE.md
+          
+      - name: Create release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.get_version.outputs.VERSION }}
+          release_name: PlayzerX ${{ steps.get_version.outputs.VERSION }}
+          body_path: temp/RELEASE.md
+          draft: false
+          prerelease: false
+          
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          
+      - name: Upload Windows release assets
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_name: PlayzerX-${{ steps.get_version.outputs.VERSION }}-Windows-x86_64.zip
+          asset_path: artifacts/windows-build/PlayzerX-${{ steps.get_version.outputs.VERSION }}-Windows-x86_64.zip
+          asset_content_type: application/zip
+          
+      - name: Upload Linux release assets
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_name: PlayzerX-${{ steps.get_version.outputs.VERSION }}-Ubuntu-22.04-x86_64.tar.gz
+          asset_path: artifacts/linux-build/PlayzerX-${{ steps.get_version.outputs.VERSION }}-Ubuntu-22.04-x86_64.tar.gz
+          asset_content_type: application/gzip 
