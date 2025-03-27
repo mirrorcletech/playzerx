@@ -219,3 +219,10 @@ gcc_*
 
 # Documentation virtual environment
 docs/venv/
+
+# Delivery directory
+delivery/
+
+# Delivery files
+PlayzerX-*.zip
+PlayzerX-*.tar.gz

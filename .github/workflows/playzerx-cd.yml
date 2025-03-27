@@ -29,12 +29,8 @@ jobs:
       - name: setup-msbuild
         uses: microsoft/setup-msbuild@v2
           
-      - name: Build Release x64
-        run: msbuild PlayzerX-All.sln /p:Configuration=Release /p:Platform=x64
-      
-      - name: Package Windows Build
-        run: |
-          Compress-Archive -Path .\x64\Release\* -DestinationPath .\PlayzerX-${{ github.ref_name }}-Windows-x86_64.zip
+      - name: Build and prepare delivery package
+        run: .\tools\windows_build_repo.bat ${{ github.ref_name }}
       
       - name: Upload Windows Build
         uses: actions/upload-artifact@v4
