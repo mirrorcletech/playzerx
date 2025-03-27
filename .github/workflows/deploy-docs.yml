@@ -2,10 +2,10 @@ name: Deploy documentation
 
 on:
   # (A) Wait until the "Build documentation" workflow completes,
-  #     but ONLY if the branch is master
+  #     but ONLY if the branch is release
   workflow_run:
     workflows: ["Build documentation"]   # Must match the 'name:' in build-docs.yml
-    branches: [ "master" ]
+    branches: [ "release" ]
     types: [ completed ]
 
   # (B) Also trigger if a new release is created or published
